@@ -1,6 +1,28 @@
 <html>
-  <head></head>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  </head>
   <body>
     <h1>Agentforce Test Page</h1>
+    <script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00Dg7000004I5IH',
+				'Github_Messaging',
+				'https://trailsignup-33a8494b8737f5.my.site.com/ESWGithubMessaging1777485317459',
+				{
+					scrt2URL: 'https://trailsignup-33a8494b8737f5.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://trailsignup-33a8494b8737f5.my.site.com/ESWGithubMessaging1777485317459/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
   </body>
 </html>
