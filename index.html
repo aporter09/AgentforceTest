@@ -37,7 +37,7 @@
             try {
                 embeddedservice_bootstrap.settings.language = 'en_US'; 
 
-              windows.addEventListener("onEmbeddedMessagingReady",() => {
+              window.addEventListener("onEmbeddedMessagingReady",() => {
                 console.log("Received the onEmbeddedMessagingReady event...");
                 embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"Internal_ID_Hidden": "F1User001"});
               });
