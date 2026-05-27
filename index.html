@@ -1,9 +1,15 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #login-box { border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 400px; }
+        button { padding: 10px; width: 100%; cursor: pointer; background-color: #0070d2; color: white; border: none; border-radius: 4px; }
+        input { padding: 10px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+    </style>
 </head>
 <body>
-    <h1>Agentforce Secure Portal</h1>
+    <h1>Agentforce Secure Portal (v2 Authenticated)</h1>
     
     <div id="login-box">
         <input type="text" id="username" placeholder="Enter 'andrew'">
@@ -13,14 +19,15 @@
 
     <script type='text/javascript'>
         let globalCustomerId = null;
+        let generatedToken = null; // 👈 Keeps track of token in memory
 
-        // 1. Handle login click, talk to your free Render server, and set identity
+        // 1. FRONTEND SELECTION ACTION
         async function handlePortalLogin() {
             const usernameInput = document.getElementById('username').value;
-            document.getElementById('status-message').innerText = "Logging in and negotiating tokens...";
+            document.getElementById('status-message').innerText = "Logging in and negotiating tokens via Render...";
 
             try {
-                // Call your live backend server (We will get this URL from Render in Step 5)
+                // Call your live backend server to execute token exchange
                 const response = await fetch('https://agentforce-auth-server.onrender.com/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -31,14 +38,15 @@
                 
                 if (data.access_token) {
                     globalCustomerId = data.customer_id;
+                    generatedToken = data.access_token; // Save the token string
 
-                    // INJECT ACCESS TOKEN NATIVELY TO THE RUNTIME
-                    embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
-                        identityToken: data.access_token
-                    });
-
-                    document.getElementById('status-message').innerText = "Login successful! Identity locked. Open chat now.";
+                    document.getElementById('status-message').innerText = "Token negotiated! Booting messaging runtime framework...";
                     document.getElementById('login-box').style.display = 'none';
+
+                    // 2. NOW boot up the framework initialization script natively!
+                    startSalesforceBootstrap();
+                } else {
+                    document.getElementById('status-message').innerText = "Authentication rejected by identity handler.";
                 }
             } catch (err) {
                 document.getElementById('status-message').innerText = "Error negotiating identity.";
@@ -46,20 +54,32 @@
             }
         }
 
-        function initEmbeddedMessaging() {
+        // 3. SECURE BINDING RUNTIME ENGINE
+        function startSalesforceBootstrap() {
             try {
                 embeddedservice_bootstrap.settings.language = 'en_US'; 
 
-                // 2. Listen for the chat framework initialization event
+                // CRITICAL V2 LOOP: Listen for the framework readiness state event
                 window.addEventListener("onEmbeddedMessagingReady", () => {
-                    // Inject the customer context mapping dynamically when the chat launches
-                    if (globalCustomerId) {
+                    console.log("🛰️ Framework engine is fully ready. Passing Identity Token to gate...");
+
+                    if (generatedToken) {
+                        // Dynamically map context parameter variables
                         embeddedservice_bootstrap.settings.customContextParameters = {
                             "Current_Customer_Internal_ID": globalCustomerId
                         };
+
+                        // MANDATORY FOR V2: Submit the token safely within the framework event window
+                        embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
+                            identityTokenType: "JWT", // 👈 Required definition for v2 layout matching
+                            identityToken: generatedToken
+                        });
+                        
+                        document.getElementById('status-message').innerText = "Identity verified securely! Chat bubble unlocked.";
                     }
                 });
 
+                // Launch the core script engine parameters
                 embeddedservice_bootstrap.init(
                     '00DPt000006cWhl',
                     'HeadlessTest',
@@ -67,10 +87,11 @@
                     { scrt2URL: 'https://formula1--sfsite2.sandbox.my.salesforce-scrt.com' }
                 );
             } catch (err) {
-                console.error('Error loading Embedded Messaging: ', err);
+                console.error('Error loading Embedded Messaging engine: ', err);
             }
-        };
+        }
     </script>
-    <script type='text/javascript' src='https://formula1--sfsite2.sandbox.my.site.com/ESWHeadlessTest1779465628764/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+    
+    <script type='text/javascript' src='https://formula1--sfsite2.sandbox.my.site.com/ESWHeadlessTest1779465628764/assets/js/bootstrap.min.js'></script>
 </body>
 </html>
