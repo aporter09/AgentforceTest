@@ -3,10 +3,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
   </head>
   <body>
-    <h1>Agentforce Test Page with End Chat</h1>
+    <h1>Agentforce Test Page F1 Dev Pro</h1>
 
 	  <button id="siteEndChatBtn" onclick="terminateActiveChat()">Force End Chat Session</button>
-
+<script>
+function terminateActiveChat() {
+    // Check if the Agentforce / MIAW bootstrap API is loaded on the page
+    if (window.embeddedservice_bootstrap && window.embeddedservice_bootstrap.userVerificationAPI) {
+        
+        // Passing true explicitly wipes the active messaging session and closes the UI window
+        window.embeddedservice_bootstrap.userVerificationAPI.clearSession(true)
+            .then(() => {
+                console.log('Chat session terminated and container closed.');
+            })
+            .catch((error) => {
+                console.error('Error attempting to clear chat session:', error);
+            });
+            
+    } else {
+        console.warn('Salesforce Messaging API is not active or initialized on this page.');
+    }
+}
+</script>
 
 <script type='text/javascript'>
 	function initEmbeddedMessaging() {
