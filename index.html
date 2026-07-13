@@ -29,8 +29,10 @@ function terminateActiveChat() {
 <script type='text/javascript'>
 	function initEmbeddedMessaging() {
 		try {
+			console.log('Starting to initialise the chat');
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
-
+			console.log('Set the language');
+			
 			embeddedservice_bootstrap.init(
 				'00Ddw000003GghV',
 				'Fan_Companion_Web_Channel',
@@ -39,6 +41,7 @@ function terminateActiveChat() {
 					scrt2URL: 'https://formulaonedigitalmedialimited--developer.sandbox.my.salesforce-scrt.com'
 				}
 			);
+			console.log('Initialisesation complete');
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
