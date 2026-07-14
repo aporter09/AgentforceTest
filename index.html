@@ -43,7 +43,7 @@ function terminateActiveChat() {
 				
 				// Send the value down to Salesforce hidden fields
 				// "Browser_Locale" must match your Custom Parameter Name in Salesforce exactly
-				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"User_Locale" : userLocale});
+				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"vUser_Locale" : userLocale});
 			});
 			// --- END OF LOCALE CAPTURE LOGIC ---
 
