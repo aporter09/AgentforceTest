@@ -33,6 +33,20 @@ function terminateActiveChat() {
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 			console.log('Set the language');
 			
+			// --- START OF LOCALE CAPTURE LOGIC ---
+			window.addEventListener("onEmbeddedMessagingReady", () => {
+				console.log("Received the onEmbeddedMessagingReady event...");
+				
+				// Capture the user's browser locale
+				const userLocale = navigator.language || navigator.userLanguage;
+				console.log("Captured browser locale: " + userLocale);
+				
+				// Send the value down to Salesforce hidden fields
+				// "Browser_Locale" must match your Custom Parameter Name in Salesforce exactly
+				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"User_Locale" : userLocale});
+			});
+			// --- END OF LOCALE CAPTURE LOGIC ---
+
 			embeddedservice_bootstrap.init(
 				'00Ddw000003GghV',
 				'Fan_Companion_Web_Channel',
@@ -49,8 +63,6 @@ function terminateActiveChat() {
 	};
 </script>
 <script type='text/javascript' src='https://formulaonedigitalmedialimited--developer.sandbox.my.site.com/ESWFanCompanionWebChan1782305032683/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
-
 
   </body>
 </html>
